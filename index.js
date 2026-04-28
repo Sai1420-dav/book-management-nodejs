@@ -8,6 +8,11 @@ app.use(express.static(path.join(__dirname))); // Serve HTML file
 
 let books = [];
 
+// 🔥 NEW: Home route (easy to test in browser)
+app.get("/", (req, res) => {
+  res.send("🚀 Book App is LIVE (Auto Deploy Working!)");
+});
+
 // Get all books
 app.get("/books", (req, res) => {
   res.json(books);
@@ -32,6 +37,7 @@ app.delete("/books/:id", (req, res) => {
   res.json({ message: "Book deleted successfully", books });
 });
 
-app.listen(PORT, () => {
-  console.log(`📚 Server running at http://localhost:${PORT}`);
+// 🔥 IMPORTANT: allow external access
+app.listen(PORT, "0.0.0.0", () => {
+  console.log(`📚 Server running on port ${PORT}`);
 });
