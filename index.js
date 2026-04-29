@@ -12,21 +12,22 @@ app.use(express.static(path.join(__dirname)));
 let books = [];
 let currentId = 1;
 
-// 🔥 Home Route (with version + timestamp)
+// 🔥 Home Route (version + timestamp)
 app.get("/", (req, res) => {
   res.send(`
-    <h2>🚀 Book App is LIVE</h2>
-    <p>Version: 2.0</p>
-    <p>Updated at: ${new Date().toLocaleString()}</p>
+    <h1>🚀 Book App is LIVE</h1>
+    <h3>Version: 2.1</h3>
+    <p>Last Updated: ${new Date().toLocaleString()}</p>
   `);
 });
 
-// 🔥 Status Route (for testing CI/CD)
+// 🔥 Health check route (IMPORTANT for CI/CD)
 app.get("/status", (req, res) => {
   res.json({
     status: "OK ✅",
-    message: "Server is running and updated!",
-    time: new Date(),
+    message: "Deployment working perfectly",
+    time: new Date().toISOString(),
+    version: "2.1"
   });
 });
 
@@ -38,13 +39,13 @@ app.get("/books", (req, res) => {
   });
 });
 
-// ➕ Add a new book
+// ➕ Add book
 app.post("/books", (req, res) => {
   const { title, author, year } = req.body;
 
   if (!title || !author || !year) {
     return res.status(400).json({
-      error: "All fields (title, author, year) are required",
+      error: "title, author, year required",
     });
   }
 
@@ -57,38 +58,38 @@ app.post("/books", (req, res) => {
 
   books.push(newBook);
 
-  console.log("📘 Book added:", newBook);
+  console.log("📘 Added:", newBook);
 
   res.status(201).json({
-    message: "Book added successfully",
+    message: "Book added",
     book: newBook,
   });
 });
 
-// ❌ Delete a book
+// ❌ Delete book
 app.delete("/books/:id", (req, res) => {
-  const id = parseInt(req.params.id);
+  const id = Number(req.params.id);
 
-  const bookExists = books.find((book) => book.id === id);
+  const exists = books.find(b => b.id === id);
 
-  if (!bookExists) {
+  if (!exists) {
     return res.status(404).json({
       error: "Book not found",
     });
   }
 
-  books = books.filter((book) => book.id !== id);
+  books = books.filter(b => b.id !== id);
 
-  console.log(`🗑️ Book deleted with id: ${id}`);
+  console.log("🗑️ Deleted:", id);
 
   res.json({
-    message: "Book deleted successfully",
+    message: "Book deleted",
     books,
   });
 });
 
-// 🔥 Server Start
+// 🔥 Server start
 app.listen(PORT, "0.0.0.0", () => {
   console.log(`📚 Server running on port ${PORT}`);
-  console.log(`🔥 Deployment successful at: ${new Date().toLocaleString()}`);
+  console.log(`🚀 App started at ${new Date().toLocaleString()}`);
 });
