@@ -3,36 +3,49 @@
 <head>
   <meta charset="UTF-8" />
   <title>Book Management App</title>
+
   <style>
     body {
       font-family: Arial;
       margin: 40px;
       background-color: #f5f5f5;
     }
+
     h1 {
       color: #333;
     }
+
+    .version {
+      color: green;
+      font-weight: bold;
+      margin-bottom: 20px;
+    }
+
     input {
       margin: 5px;
       padding: 8px;
       width: 200px;
     }
+
     button {
       padding: 8px 15px;
       margin: 5px;
       cursor: pointer;
-      background-color: #4caf50;
+      background-color: #1e90ff;
       border: none;
       color: white;
       border-radius: 5px;
     }
+
     button.delete {
       background-color: #e74c3c;
     }
+
     ul {
       list-style-type: none;
       padding: 0;
     }
+
     li {
       background: white;
       margin: 5px 0;
@@ -45,8 +58,14 @@
     }
   </style>
 </head>
+
 <body>
-  <h1>📚 Book Management App</h1>
+
+  <h1>🚀 Book Management App - LIVE DEPLOY TEST V2</h1>
+
+  <p class="version">
+    Version: 2.1 | Auto Deploy Active ✅
+  </p>
 
   <div>
     <input id="title" placeholder="Book Title" />
@@ -64,31 +83,32 @@
       const author = document.getElementById("author").value;
       const year = document.getElementById("year").value;
 
-      const response = await fetch("/books", {
+      await fetch("/books", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ title, author, year }),
       });
 
-      const data = await response.json();
       loadBooks();
     }
 
     async function loadBooks() {
       const response = await fetch("/books");
-      const books = await response.json();
+      const data = await response.json();
 
       const list = document.getElementById("bookList");
       list.innerHTML = "";
 
-      books.forEach((book) => {
+      data.books.forEach((book) => {
         const li = document.createElement("li");
+
         li.innerHTML = `
           <div>
             <strong>${book.title}</strong> by ${book.author} (${book.year})
           </div>
           <button class="delete" onclick="deleteBook(${book.id})">Delete</button>
         `;
+
         list.appendChild(li);
       });
     }
@@ -97,6 +117,10 @@
       await fetch("/books/" + id, { method: "DELETE" });
       loadBooks();
     }
+
+    // auto load on refresh
+    loadBooks();
   </script>
+
 </body>
 </html>
