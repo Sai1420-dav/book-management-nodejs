@@ -1,0 +1,23 @@
+name: Auto Deploy Node App
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  deploy:
+    runs-on: self-hosted
+
+    steps:
+      - name: Go to project folder
+        run: cd /home/ubuntu/book-management-nodejs
+
+      - name: Pull latest code
+        run: git pull origin master
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Restart app
+        run: pm2 restart all
