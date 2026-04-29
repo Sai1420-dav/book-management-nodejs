@@ -9,10 +9,11 @@ jobs:
   deploy:
     runs-on: self-hosted
 
-    steps:
-      - name: Go to project folder
-        run: cd /home/ubuntu/book-management-nodejs
+    defaults:
+      run:
+        working-directory: /home/ubuntu/book-management-nodejs
 
+    steps:
       - name: Pull latest code
         run: git pull origin master
 
@@ -20,4 +21,4 @@ jobs:
         run: npm install
 
       - name: Restart app
-        run: pm2 restart all
+        run: pm2 restart book-app
